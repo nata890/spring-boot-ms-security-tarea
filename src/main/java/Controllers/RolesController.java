@@ -15,6 +15,7 @@ public class RolesController {
     @Autowired
     private RoleRepository theRoleRepository;
 
+    //metodo para listar
     @GetMapping("")
     public List<Role> index(){
         return this.theRoleRepository.findAll();
@@ -34,6 +35,33 @@ public class RolesController {
                 .findById(id)
                 .orElse(null);
         return theRole;
+    }
+
+     //metodo para la actualizacion
+    @PutMapping("{id}")
+    public Role update(@PathVariable String id,@RequestBody Role theNewRole){
+        Role theActualRole=this.theRoleRepository
+                .findById(id)
+                .orElse(null);
+        if (theActualRole!=null){
+            theActualRole.setName(theNewRole.getName());
+            theActualRole.setDescription(theNewRole.getDescription());
+            return this.theRoleRepository.save(theActualRole);
+        }else{
+            return null;
+        }
+    }
+
+    //metodo de eliminacion
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("{id}")
+    public void destroy(@PathVariable String id){
+        Role theRole=this.theRoleRepository
+                .findById(id)
+                .orElse(null);
+        if (theRole!=null){
+            this.theRoleRepository.delete(theRole);
+        }
     }
 
 }
